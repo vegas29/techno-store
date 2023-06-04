@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+    const url = `${import.meta.env.PUBLIC_API_URL}/products?populate=image`;
+    const respuesta = await fetch(url);
+    const { data } = await respuesta.json();
+    return data.map(producto => ({
+        params: {
+            id: producto.attributes.url
+        },
+        props: {
+            producto: producto.attributes
+        }
+    }))
+}
+---
+
+<Layout title="Tienda Virtual" description="Music instruments store">
+    <main class="product">
+        <h1>Routing dinámico</h1>
+    </main>
+</Layout>
