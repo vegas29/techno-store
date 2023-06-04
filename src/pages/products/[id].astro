@@ -5,19 +5,106 @@ export async function getStaticPaths() {
     const url = `${import.meta.env.PUBLIC_API_URL}/products?populate=image`;
     const respuesta = await fetch(url);
     const { data } = await respuesta.json();
-    return data.map(producto => ({
+    return data.map((producto) => ({
         params: {
-            id: producto.attributes.url
+            id: producto.attributes.url,
         },
         props: {
-            producto: producto.attributes
-        }
-    }))
+            producto: producto.attributes,
+        },
+    }));
 }
+
+const { name, image, description, price } = Astro.props.producto;
 ---
 
-<Layout title="Tienda Virtual" description="Music instruments store">
-    <main class="product">
-        <h1>Routing dinámico</h1>
+<Layout title={name} description="Music instruments store">
+    <main class="producto">
+        <img src={image.data.attributes.url} alt={`Product image ${name}`} />
+
+        <div class="contenido">
+            <h3>{name}</h3>
+            <p class="descripcion">{description}</p>
+            <p class="precio">${price}</p>
+
+            <form class="formulario">
+                <label for="cantidad">Cantidad:</label>
+                <select id="cantidad">
+                    <option value="0">--Seleccione--</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <input
+                    type="submit"
+                    value="Agregar al carro"
+                />
+            </form>
+        </div>
     </main>
 </Layout>
+
+<style>
+    .producto {
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        gap: 1rem;
+        align-items: center;
+        max-width: 70rem;
+        margin: 0 auto;
+    }
+    .contenido {
+        padding: 1rem;
+    }
+    .contenido h3 {
+        font-size: 3rem;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+    .descripcion {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        overflow: hidden;
+        font-size: 1.8rem;
+    }
+    .precio {
+        color: var(--primary);
+        font-size: 4rem;
+        margin: 0;
+        font-weight: 900;
+    }
+    .formulario {
+        margin-top: 4rem;
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+    }
+    .formulario label {
+        font-size: 2.2rem;
+    }
+    .formulario select {
+        border: 1px solid var(--black);
+        padding: 1rem;
+        text-align: center;
+        border-radius: 1rem;
+    }
+    .formulario input[type="submit"] {
+        display: block;
+        width: 100%;
+        font-weight: bold;
+        border: none;
+        padding: 1.4rem;
+        background-color: var(--black);
+        color: var(--white);
+        border-radius: 5px;
+        transition-property: background-color;
+        transition-duration: 300ms;
+    }
+    .formulario input[type="submit"]:hover {
+        background-color: var(--primary);
+        cursor: pointer;
+    }
+</style>
