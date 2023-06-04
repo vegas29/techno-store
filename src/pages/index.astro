@@ -2,19 +2,24 @@
 import Post from '../components/Post.astro';
 import Product from '../components/Product.astro';
 import Layout from '../layouts/Layout.astro';
+import Course from '../components/Course.astro';
 
 const urlProducts = `${import.meta.env.PUBLIC_API_URL}/products?populate=image`;
 const urlPosts = `${import.meta.env.PUBLIC_API_URL}/posts?populate=image`;
+const urlCourse = `${import.meta.env.PUBLIC_API_URL}/course?populate=image`;
 
-const [resProducts, resPosts] = await Promise.all([
+const [resProducts, resPosts, resCourse] = await Promise.all([
 	fetch(urlProducts),
 	fetch(urlPosts),
+	fetch(urlCourse),
 ])
 
-const [{data: products}, {data: posts}] = await Promise.all([
+const [{data: products}, {data: posts}, {data: course}] = await Promise.all([
 	resProducts.json(),
-	resPosts.json()
+	resPosts.json(),
+	resCourse.json()
 ])
+
 ---
 
 <Layout 
@@ -35,6 +40,12 @@ const [{data: products}, {data: posts}] = await Promise.all([
 			))}
 		</div>
 	</main>
+
+	<Course 
+	    title={course.attributes.title}
+	    content={course.attributes.content}
+	    image={course.attributes.image}
+	/>
 
 	<section class="contenedor">
 		<h2 class="heading">Blog</h2>
