@@ -1,5 +1,20 @@
 ---
+import Post from '../components/Post.astro';
+import Product from '../components/Product.astro';
 import Layout from '../layouts/Layout.astro';
+
+const urlProducts = `${import.meta.env.PUBLIC_API_URL}/products?populate=image`;
+const urlPosts = `${import.meta.env.PUBLIC_API_URL}/posts?populate=image`;
+
+const [resProducts, resPosts] = await Promise.all([
+	fetch(urlProducts),
+	fetch(urlPosts),
+])
+
+const [{data: products}, {data: posts}] = await Promise.all([
+	resProducts.json(),
+	resPosts.json()
+])
 ---
 
 <Layout 
@@ -7,8 +22,34 @@ import Layout from '../layouts/Layout.astro';
 	description="Music instruments store"
 >
 	<main class="contenedor">
-		<h1 class="heading">Inicio</h1>
+		<h1 class="heading">Nuestra colección</h1>
+		<div class="grid">
+			{products?.map(product => (
+				<Product
+					name={product.attributes.name}
+					description={product.attributes.description}
+					url={product.attributes.url}
+					price={product.attributes.price}
+					image={product.attributes.image}
+				/>
+			))}
+		</div>
 	</main>
+
+	<section class="contenedor">
+		<h2 class="heading">Blog</h2>
+		<div class="grid">
+			{posts?.map(post => (
+				<Post
+				    title={post.attributes.title}
+					publishedAt={post.attributes.publishedAt}
+					content={post.attributes.content}
+					image={post.attributes.image}
+					url={post.attributes.url}
+				/>
+			))}
+		</div>
+	</section>
 </Layout>
 
 <style>
