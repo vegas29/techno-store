@@ -1,5 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const url = `${import.meta.env.PUBLIC_API_URL}/products`;
+const respuesta = await fetch(url);
+const { data } = await respuesta.json();
 ---
 
 <Layout 
@@ -8,6 +12,12 @@ import Layout from '../layouts/Layout.astro';
 >
 	<main class="contenedor">
 		<h1 class="heading">Tienda virtual</h1>
+
+		<div class="grid">
+			{data?.map(product => (
+				<h1>{product.attributes.name}</h1>
+			))}
+		</div>
 	</main>
 </Layout>
 
