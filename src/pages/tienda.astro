@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Product from '../components/Product.astro';
 
-const url = `${import.meta.env.PUBLIC_API_URL}/products`;
+const url = `${import.meta.env.PUBLIC_API_URL}/products?populate=image`;
 const respuesta = await fetch(url);
 const { data } = await respuesta.json();
 ---
@@ -15,7 +16,13 @@ const { data } = await respuesta.json();
 
 		<div class="grid">
 			{data?.map(product => (
-				<h1>{product.attributes.name}</h1>
+				<Product
+					name={product.attributes.name}
+					description={product.attributes.description}
+					url={product.attributes.url}
+					price={product.attributes.price}
+					image={product.attributes.image}
+				/>
 			))}
 		</div>
 	</main>

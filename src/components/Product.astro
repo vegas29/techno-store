@@ -1,0 +1,179 @@
+---
+export interface Props {
+    name: string;
+    description: string;
+    url: string;
+    price: number;
+    image: ImageClass;
+}
+
+export interface ImageClass {
+    data: Data;
+}
+
+export interface Data {
+    id:         number;
+    attributes: DataAttributes;
+}
+
+export interface DataAttributes {
+    name:              string;
+    alternativeText:   null;
+    caption:           null;
+    width:             number;
+    height:            number;
+    formats:           Formats;
+    hash:              string;
+    ext:               EXT;
+    mime:              MIME;
+    size:              number;
+    url:               string;
+    previewUrl:        null;
+    provider:          string;
+    provider_metadata: ProviderMetadata;
+    createdAt:         Date;
+    updatedAt:         Date;
+}
+
+export enum EXT {
+    PNG = ".png",
+}
+
+export interface Formats {
+    small:     Medium;
+    medium:    Medium;
+    thumbnail: Medium;
+}
+
+export interface Medium {
+    ext:               EXT;
+    url:               string;
+    hash:              string;
+    mime:              MIME;
+    name:              string;
+    path:              null;
+    size:              number;
+    width:             number;
+    height:            number;
+    provider_metadata: ProviderMetadata;
+}
+
+export enum MIME {
+    ImagePNG = "image/png",
+}
+
+export interface ProviderMetadata {
+    public_id:     string;
+    resource_type: ResourceType;
+}
+
+export enum ResourceType {
+    Image = "image",
+}
+
+export interface Meta {
+    pagination: Pagination;
+}
+
+export interface Pagination {
+    page:      number;
+    pageSize:  number;
+    pageCount: number;
+    total:     number;
+}
+
+const { name, description, url, price, image } = Astro.props;
+---
+
+<div class="producto">
+    <img
+        src={image.data.attributes.formats.medium.url}
+        alt={`Product image ${name}`}
+    />
+    <div class="contenido">
+        <h3>{name}</h3>
+        <p class="descripcion">{description}</p>
+        <p class="precio">${price}</p>
+        <a class="enlace" href={`/products/${url}`}> Ver producto</a>
+    </div>
+</div>
+
+<style>
+    .producto {
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        gap: 1rem;
+        align-items: center;
+        max-width: 70rem;
+        margin: 0 auto;
+    }
+    .contenido {
+        padding: 1rem;
+    }
+    .contenido h3 {
+        font-size: 2.7rem;
+        text-transform: capitalize;
+        color: var(--primary);
+    }
+    .descripcion {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        overflow: hidden;
+        font-size: 1.8rem;
+    }
+    .precio {
+        color: var(--primary);
+        font-size: 2.5rem;
+        margin: 0;
+        font-weight: 900;
+    }
+    .enlace {
+        margin-top: 2rem;
+        display: block;
+        background-color: var(--black);
+        color: var(--white);
+        border-radius: 5px;
+        text-decoration: none;
+        padding: 1rem;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 700;
+        transition-property: background-color;
+        transition-duration: 300ms;
+    }
+    .enlace:hover {
+        background-color: var(--primary);
+    }
+    .formulario {
+        margin-top: 4rem;
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+    }
+    .formulario label {
+        font-size: 2.2rem;
+    }
+    .formulario select {
+        border: 1px solid var(--black);
+        padding: 1rem;
+        text-align: center;
+        border-radius: 1rem;
+    }
+    .formulario input[type="submit"] {
+        display: block;
+        width: 100%;
+        text-transform: uppercase;
+        font-weight: bold;
+        border: none;
+        padding: 1.4rem;
+        background-color: var(--black);
+        color: var(--white);
+        transition-property: background-color;
+        transition-duration: 300ms;
+    }
+    .formulario input[type="submit"]:hover {
+        background-color: var(--primary);
+        cursor: pointer;
+    }
+</style>
